@@ -1,0 +1,6 @@
+.*.sw*
+*.o
+pish
+
+.DS_Store
+*Zone.Identifier
