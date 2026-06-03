@@ -26,7 +26,22 @@ void add_history(const struct pish_arg *arg) {
     if (!(*pish_history_path)) {
         set_history_path();
     }
-    // TODO
+ 
+    FILE *fp = fopen(pish_history_path, "a");
+    if (fp == NULL) {
+        perror(pish_history_path);
+        return;
+    }
+ 
+    // Write argv[0] through argv[argc-1] separated by single spaces
+    for (int i = 0; i < arg->argc; i++) {
+        if (i > 0) {
+            fprintf(fp, " ");
+        }
+        fprintf(fp, "%s", arg->argv[i]);
+    }
+    fprintf(fp, "\n");
+    fclose(fp);
 }
 
 /*
@@ -46,7 +61,22 @@ void print_history() {
     if (!(*pish_history_path)) {
         set_history_path();
     }
-    // TODO
+ 
+    FILE *fp = fopen(pish_history_path, "r");
+    if (fp == NULL) {
+        // History file doesn't exist yet: nothing to print
+        return;
+    }
+ 
+    char line[MAX_ARGC * 256]; // generous buffer for a history line
+    int line_num = 1;
+    while (fgets(line, sizeof(line), fp) != NULL) {
+        printf("%d %s", line_num, line);
+        line_num++;
+    }
+ 
+    fclose(fp);
+
 }
 
 /*
@@ -56,5 +86,12 @@ void clear_history() {
     if (!(*pish_history_path)) {
         set_history_path();
     }
-    // TODO
+ 
+    // Open in "w" mode truncates the file to zero length
+    FILE *fp = fopen(pish_history_path, "w");
+    if (fp == NULL) {
+        perror(pish_history_path);
+        return;
+    }
+    fclose(fp);
 }

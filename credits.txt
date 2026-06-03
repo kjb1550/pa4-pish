@@ -1,0 +1,2 @@
+- Used AI and google to help with implementation questions
+- Used AI to help with debugging and understanding bugs
